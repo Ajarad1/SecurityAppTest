@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskmanager-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: taskmanager
+  template:
+    metadata:
+      labels:
+        app: taskmanager
+    spec:
+      containers:
+        - name: taskmanager-container
+          image: student-task-manager:latest
+          imagePullPolicy: Never #use always local image
+          ports:
+            - containerPort: 8080
+          env:
+            # we use h2 for this test
+            - name: DB_URL
+              value: "jdbc:h2:mem:taskdb"
+            - name: DB_USER
+              value: "sa"
+            - name: DB_PASSWORD
+              value: "password"
+            - name: SPRING_JPA_DATABASE_PLATFORM
+              value: "org.hibernate.dialect.H2Dialect"
